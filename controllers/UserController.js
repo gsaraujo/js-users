@@ -23,6 +23,8 @@ class UserController {
 
             let values = this.getValues();
 
+            if (!values) return false;
+
             //values.photo = "";
 
             this.getPhoto().then((content)=>{
@@ -65,6 +67,7 @@ class UserController {
 
             });
 
+
             let file = elements[0].files[0]
 
 
@@ -77,6 +80,7 @@ class UserController {
             fileReader.onerror = (e)=> {
 
                 reject(e);
+
 
             };
 
@@ -97,8 +101,17 @@ class UserController {
 
         let user = {};
 
+        let isValid = true;
+
         //Array.from(this.formEl.elements).forEach(function(field, index){// solution 1
         [...this.formEl.elements].forEach(function(field, index){// solution 2
+
+            if ((['name', 'email', 'password'].indexOf(field.name) > -1) && !field.value) {
+
+                field.parentElement.classList.add('has-error');
+                isValid = false;
+
+            }
 
             if (field.name == "gender") {
     
@@ -114,6 +127,10 @@ class UserController {
                 }
     
         });
+
+        if (!isValid) {
+            return false;
+        }
     
         return new User(
             user.name,
@@ -134,6 +151,10 @@ class UserController {
 
         let tr = document.createElement('tr');
 
+        //tr.dataset.user = dataUser;//dataset converts the object to string. In this case, specifically, user variable will show [object Object] and that means one lost all the object properties.
+
+        tr.dataset.user = JSON.stringify(dataUser);//serialize - turns an object into a text. In this case -> JSON string.
+
         tr.innerHTML = `<td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
                         <td>${dataUser.name}</td>
                         <td>${dataUser.email}</td>
@@ -147,7 +168,29 @@ class UserController {
 
 
         this.tableEl.appendChild(tr);
+
+        this.updateCount();
     
+    }
+
+    updateCount() {
+
+        let numberUsers = 0;
+        let numberAdmin = 0;
+
+        [...this.tableEl.children].forEach(tr=>{
+
+            numberUsers++;
+
+            let user = JSON.parse(tr.dataset.user);
+
+            if (user._admin) numberAdmin++;
+
+        });
+
+        document.querySelector("#number-users").innerHTML = numberUsers;
+        document.querySelector("#number-users-admin").innerHTML = numberAdmin;
+
     }
 
 
