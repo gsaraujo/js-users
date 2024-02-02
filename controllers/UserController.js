@@ -6,6 +6,17 @@ class UserController {
         this.tableEl = document.getElementById(tableId);
 
         this.onSubmit();
+        this.onEdit();
+
+    }
+
+    onEdit() {
+
+        document.querySelector("#box-user-update .btn-cancel").addEventListener("click", e=>{
+
+            this.showPanelCreate();
+
+        });
 
     }
 
@@ -161,10 +172,48 @@ class UserController {
                         <td>${(dataUser.admin)? 'Sim' : 'Não'}</td>
                         <td>${Utils.dateFormat(dataUser.register)}</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-xs btn-flat">Editar</button>
+                            <button type="button" class="btn btn-primary btn-xs btn-edit btn-flat">Editar</button>
                             <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
                         </td>` ;
         //one way to format data -> <td>${dataUser.register.getDate()}/${dataUser.register.getMonth()+1}/${dataUser.register.getFullYear()}</td>
+
+        tr.querySelector(".btn-edit").addEventListener("click", e=> {
+
+            let json = JSON.parse(tr.dataset.user);
+            let form = document.querySelector("#form-user-update");
+
+            for (let name in json) {
+
+                let field = form.querySelector("[name=" + name.replace("_","") + "]");
+
+                if (field) {
+
+                    if (field.type == 'file') continue;
+
+                    switch (field.type) {
+                        case 'file':
+                            continue;
+                            break;
+                        case 'radio':
+                            field = form.querySelector("[name=" + name.replace("_","") + "][value=" + json[name] + "]");
+                            field.checked = true;
+                            break;
+                        case 'checkbox':
+                                field.checked = json[name];
+                            break;
+
+                        default:
+                            field.value = json[name];
+                            break;
+                    }
+
+                }
+
+            }
+
+            this.showPanelUpdate();
+
+        });
 
 
         this.tableEl.appendChild(tr);
@@ -172,6 +221,22 @@ class UserController {
         this.updateCount();
     
     }
+
+    showPanelCreate(){
+
+        document.querySelector("#box-user-create").style.display = "block";
+        document.querySelector("#box-user-update").style.display = "none";
+
+    }
+
+    showPanelUpdate() {
+
+        document.querySelector("#box-user-create").style.display = "none";
+        document.querySelector("#box-user-update").style.display = "block";
+
+    }
+
+
 
     updateCount() {
 

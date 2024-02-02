@@ -1,10 +1,10 @@
 class User {
 
-    constructor(name, gender, birthdate, country, email, password, photo, admin) {
+    constructor(name, gender, birth, country, email, password, photo, admin) {
 
         this._name = name;//Conventionally it means a private property because of the _
         this._gender = gender;//Conventionally it means a private property because of the _
-        this._birthdate = birthdate;//Conventionally it means a private property because of the _
+        this._birth = birth;//Conventionally it means a private property because of the _
         this._country = country;//Conventionally it means a private property because of the _
         this._email = email;//Conventionally it means a private property because of the _
         this._password = password;//Conventionally it means a private property because of the _
