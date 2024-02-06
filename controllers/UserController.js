@@ -227,10 +227,14 @@ class UserController {
 
         let users = [];
 
-        if (sessionStorage.getItem("users")) {
+        /*if (sessionStorage.getItem("users")) {
 
             users = JSON.parse(sessionStorage.getItem("users"));
 
+        } this is done when we need to save information on the web session*/
+
+        if (localStorage.getItem("users")) {
+            users = JSON.parse(localStorage.getItem("users"));
         }
 
         return users;
@@ -258,7 +262,8 @@ class UserController {
 
         users.push(data);
 
-        sessionStorage.setItem("users",JSON.stringify(users));
+        //sessionStorage.setItem("users",JSON.stringify(users));
+        localStorage.setItem("users",JSON.stringify(users));
 
 
     }
