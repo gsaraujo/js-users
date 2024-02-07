@@ -2,6 +2,7 @@ class User {
 
     constructor(name, gender, birth, country, email, password, photo, admin) {
 
+        this._id;
         this._name = name;//Conventionally it means a private property because of the _
         this._gender = gender;//Conventionally it means a private property because of the _
         this._birth = birth;//Conventionally it means a private property because of the _
@@ -13,6 +14,10 @@ class User {
         this._register = new Date();//Conventionally it means a private property because of the _
 
 
+    }
+
+    get id() {
+        return this._id;
     }
 
     get name() {
@@ -66,11 +71,98 @@ class User {
 
                 default:
                     this[name] = json[name];
-                    break;
             }
 
         }
 
+
+    }
+
+    static getUsersStorage() {
+
+        let users = [];
+
+        /*if (sessionStorage.getItem("users")) {
+
+            users = JSON.parse(sessionStorage.getItem("users"));
+
+        } this is done when we need to save information on the web session*/
+
+        if (localStorage.getItem("users")) {
+            users = JSON.parse(localStorage.getItem("users"));
+        }
+
+        return users;
+    }
+
+    getNewID() {
+
+        let usersID = parseInt(localStorage.getItem("usersID"));
+
+        if (!usersID > 0) usersID = 0;
+
+        usersID++;
+
+        localStorage.setItem("usersID", usersID);
+
+        return usersID;
+
+
+    }
+
+    save() {
+
+        let users = User.getUsersStorage();
+
+        if (this.id > 0) {
+
+            //let user = users.filter(u=>{ return u._id === this.id; });
+
+            //let newUser = Object.assign({}, user, this);
+
+            users.map(u=>{
+
+                if (u._id == this.id) {
+
+                    Object.assign(u, this);
+
+                }
+
+                return u;
+
+            });
+
+
+
+        } else {
+
+            this._id = this.getNewID();
+
+            users.push(this);
+
+        }
+
+        //sessionStorage.setItem("users",JSON.stringify(users));
+        localStorage.setItem("users",JSON.stringify(users));
+
+
+
+    }
+
+    remove() {
+
+        let users = User.getUsersStorage();
+
+        users.forEach((userData, index) => {
+
+            if (this._id == userData._id) {
+
+                users.splice(index,1);
+            }
+
+        });
+
+        localStorage.setItem("users",JSON.stringify(users));
 
     }
 

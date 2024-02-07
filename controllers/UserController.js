@@ -49,7 +49,9 @@ class UserController {
 
                 let user = new User();
 
-                user = loadFromJSON(result)
+                user.loadFromJSON(result);
+
+                user.save();
 
                 this.getTr(user, tr);
 
@@ -97,7 +99,7 @@ class UserController {
 
                 values.photo = content;
 
-                this.insert(values);
+                values.save();
 
                 this.addLine(values);
 
@@ -214,26 +216,10 @@ class UserController {
         
     }
 
-    getUsersStorage() {
-
-        let users = [];
-
-        /*if (sessionStorage.getItem("users")) {
-
-            users = JSON.parse(sessionStorage.getItem("users"));
-
-        } this is done when we need to save information on the web session*/
-
-        if (localStorage.getItem("users")) {
-            users = JSON.parse(localStorage.getItem("users"));
-        }
-
-        return users;
-    }
 
     selectAll() {
 
-        let users = this.getUsersStorage();
+        let users = User.getUsersStorage();
 
         users.forEach(dataUser=>{
 
@@ -244,18 +230,6 @@ class UserController {
             this.addLine(user);
 
         });
-
-    }
-
-    insert(data) {
-
-        let users = this.getUsersStorage();
-
-        users.push(data);
-
-        //sessionStorage.setItem("users",JSON.stringify(users));
-        localStorage.setItem("users",JSON.stringify(users));
-
 
     }
 
@@ -302,8 +276,16 @@ class UserController {
 
         tr.querySelector(".btn-delete").addEventListener("click", e=> {
 
-            if (confirm("Desaja realmente excluir o usuário?")) {
+            if (confirm("Deseja realmente excluir o usuário?")) {
+
+                let user = new User();
+
+                user.loadFromJSON(JSON.parse(tr.dataset.user));
+
+                user.remove();
+
                 tr.remove();
+
                 this.updateCount();
             }
 
