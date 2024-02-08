@@ -4,7 +4,7 @@
 
 Users project developed from the "Curso Completo de JavaScript" at Udemy.com.
 
-### Projeto
+### Project
 
-Simple project to view and understand JS (DOM, variables, selectors, JSON, events, MVC, POO, Spread, FileReader, Promise and many more).
+Simple project to view and understand JS (DOM, variables, selectors, JSON, events, MVC, POO, Spread, FileReader, Promises and many more).
 
